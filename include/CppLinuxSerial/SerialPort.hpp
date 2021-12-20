@@ -20,6 +20,10 @@
 #include <vector>
 #include <asm/ioctls.h>
 #include <asm/termbits.h>
+#ifdef QT
+#include <QByteArray>
+#include <QDebug>
+#endif
 
 // User headers
 #include "Exception.hpp"
@@ -123,6 +127,13 @@ namespace mn {
             /// \throws		CppLinuxSerial::Exception if state != OPEN.
             void WriteBinary(const std::vector<uint8_t>& data);
 
+            #ifdef QT
+            /// \brief		Sends a binary message over the com port.
+            /// \param		data		The data that will be written to the COM port.
+            /// \throws		CppLinuxSerial::Exception if state != OPEN.
+            void WriteBinary(QByteArray data);
+            #endif
+
             /// \brief		Use to read text from the COM port.
             /// \param		data		The object the read characters from the COM port will be saved to.
             /// \param      wait_ms     The amount of time to wait for data. Set to 0 for non-blocking mode. Set to -1
@@ -135,7 +146,19 @@ namespace mn {
             /// \param      wait_ms     The amount of time to wait for data. Set to 0 for non-blocking mode. Set to -1
             ///                 to wait indefinitely for new data.
             /// \throws		CppLinuxSerial::Exception if state != OPEN.
-            void ReadBinary(std::vector<uint8_t>& data);
+            int ReadBinary(std::vector<uint8_t>& data, int size = defaultReadBufferSize_B_);
+
+            #ifdef QT
+            /// \brief		Use to read binary data from the COM port.
+            /// \throws		CppLinuxSerial::Exception if state != OPEN.
+            QByteArray ReadBinary(int size = defaultReadBufferSize_B_);
+            #endif
+
+            State state() const;
+
+            void clearBuffer();
+
+            const std::string &device() const;
 
         private:
 
@@ -182,7 +205,6 @@ namespace mn {
             static constexpr BaudRate defaultBaudRate_ = BaudRate::B_57600;
             static constexpr int32_t defaultTimeout_ms_ = -1;
             static constexpr unsigned char defaultReadBufferSize_B_ = 255;
-
 
         };
 

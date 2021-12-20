@@ -8,3 +8,7 @@ docs/_build/
 
 # Build artifacts
 a.out
+
+# Qt
+*.pro.user
+*.pro.user.*
