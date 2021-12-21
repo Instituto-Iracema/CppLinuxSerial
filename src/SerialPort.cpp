@@ -548,7 +548,16 @@ namespace CppLinuxSerial {
 
     void SerialPort::clearBuffer()
     {
-        ReadBinary(defaultReadBufferSize_B_);
+        int previos_timeout = timeout_ms_;
+        timeout_ms_ = 0;
+        ConfigureTermios();
+        std::vector<uint8_t> data = {0};
+        int numberOfBytes = -1;
+        while (numberOfBytes != 0) {
+            numberOfBytes = ReadBinary(data, 255);
+        }
+        timeout_ms_ = previos_timeout;
+        ConfigureTermios();
     }
 
     void SerialPort::Close() {
