@@ -1,5 +1,6 @@
 #include "CppLinuxSerial/SerialPort.hpp"
 #include <QDebug>
+#include <QTime>
 
 unsigned char temp[6];
 unsigned char data[1];
